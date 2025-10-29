@@ -4,21 +4,25 @@
 Module: operations.py
 
 This module contains basic arithmetic functions that perform addition, subtraction,
-multiplication, and division of two numbers. These functions are foundational for
-building more complex applications, such as calculators or financial tools.
+multiplication, division, exponentiation, and modulo operations on two numbers. 
+These functions are foundational for building more complex applications, such as 
+calculators or financial tools.
 
 Functions:
 - add(a: Union[int, float], b: Union[int, float]) -> Union[int, float]: Returns the sum of a and b.
 - subtract(a: Union[int, float], b: Union[int, float]) -> Union[int, float]: Returns the difference when b is subtracted from a.
 - multiply(a: Union[int, float], b: Union[int, float]) -> Union[int, float]: Returns the product of a and b.
 - divide(a: Union[int, float], b: Union[int, float]) -> float: Returns the quotient when a is divided by b. Raises ValueError if b is zero.
+- power(base: Union[int, float], exponent: Union[int, float]) -> float: Returns the base raised to the power of the exponent. Raises ValueError for domain errors.
+- modulo(a: Union[int, float], b: Union[int, float]) -> Union[int, float]: Returns the remainder of a divided by b. Raises ValueError if b is zero.
 
 Usage:
 These functions can be imported and used in other modules or integrated into APIs
 to perform arithmetic operations based on user input.
 """
 
-from typing import Union  # Import Union for type hinting multiple possible types
+import math # Import the math module for the power function
+from typing import Union
 
 # Define a type alias for numbers that can be either int or float
 Number = Union[int, float]
@@ -117,4 +121,75 @@ def divide(a: Number, b: Number) -> float:
     
     # Perform division of a by b and return the result as a float
     result = a / b
+    return result
+
+def power(base: Number, exponent: Number) -> float:
+    """
+    Raise the base number to the power of the exponent.
+
+    Parameters:
+    - base (int or float): The base number.
+    - exponent (int or float): The exponent to raise the base to.
+
+    Returns:
+    - float: The result of base raised to the power of exponent.
+
+    Raises:
+    - ValueError: If the calculation is mathematically undefined (e.g., negative base to a fractional exponent).
+
+    Example:
+    >>> power(2, 3)
+    8.0
+    >>> power(4, 0.5)
+    2.0
+    >>> power(9, -1)
+    0.1111111111111111
+    >>> power(-1, 0.5) 
+    Traceback (most recent call last):
+        ...
+    ValueError: Math domain error during power operation.
+    """
+    try:
+        # Use math.pow for better handling of floats and potential errors
+        result = math.pow(base, exponent)
+        return result
+    except ValueError:
+        # Catch errors like raising negative numbers to fractional powers
+        raise ValueError("Math domain error during power operation.")
+
+# --- New Function Added ---
+def modulo(a: Number, b: Number) -> Number:
+    """
+    Calculate the remainder of the division of a by b.
+
+    Parameters:
+    - a (int or float): The dividend.
+    - b (int or float): The divisor.
+
+    Returns:
+    - int or float: The remainder when a is divided by b. The type (int/float) matches Python's behavior for the % operator.
+
+    Raises:
+    - ValueError: If b is zero, as modulo by zero is undefined.
+
+    Example:
+    >>> modulo(10, 3)
+    1
+    >>> modulo(10.5, 3)
+    1.5
+    >>> modulo(7, 2)
+    1
+    >>> modulo(7.0, 2.0)
+    1.0
+    >>> modulo(5, 0)
+    Traceback (most recent call last):
+        ...
+    ValueError: Cannot perform modulo by zero!
+    """
+    # Check if the divisor is zero
+    if b == 0:
+        raise ValueError("Cannot perform modulo by zero!")
+    
+    # Perform the modulo operation
+    result = a % b
     return result

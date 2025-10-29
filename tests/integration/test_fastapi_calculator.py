@@ -152,3 +152,82 @@ def test_divide_by_zero_api(client):
     # Assert that the 'error' field contains the correct error message
     assert "Cannot divide by zero!" in response.json()['error'], \
         f"Expected error message 'Cannot divide by zero!', got '{response.json()['error']}'"
+
+def test_power_api(client):
+    """
+    Test the Power API Endpoint.
+
+    Verifies that the `/power` endpoint correctly calculates 'a' raised to the power of 'b'.
+    """
+    # Send a POST request to the '/power' endpoint
+    response = client.post('/power', json={'a': 2, 'b': 8}) # Example: 2^8
+
+    # Assert that the response status code is 200 (OK)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+
+    # Assert that the JSON response contains the correct 'result' value
+    # Use pytest.approx for floating point results if necessary, depending on API implementation
+    assert response.json()['result'] == 256.0, f"Expected result 256.0, got {response.json()['result']}"
+
+# ---------------------------------------------
+# Test Function: test_power_domain_error_api (NEW)
+# ---------------------------------------------
+def test_power_domain_error_api(client):
+    """
+    Test the Power API Endpoint for math domain errors.
+
+    Verifies that `/power` returns a 400 error for invalid operations like
+    a negative base to a fractional exponent.
+    """
+    # Send a POST request attempting an invalid operation
+    response = client.post('/power', json={'a': -1, 'b': 0.5})
+
+    # Assert that the response status code is 400 (Bad Request)
+    assert response.status_code == 400, f"Expected status code 400, got {response.status_code}"
+
+    # Assert that the JSON response contains an 'error' field
+    assert 'error' in response.json(), "Response JSON does not contain 'error' field"
+
+    # Assert that the 'error' field contains the correct error message
+    assert "Math domain error" in response.json()['error'], \
+        f"Expected error message containing 'Math domain error', got '{response.json()['error']}'"
+
+# ---------------------------------------------
+# Test Function: test_modulo_api (NEW)
+# ---------------------------------------------
+def test_modulo_api(client):
+    """
+    Test the Modulo API Endpoint.
+
+    Verifies that the `/modulo` endpoint correctly calculates the remainder of 'a' divided by 'b'.
+    """
+    # Send a POST request to the '/modulo' endpoint
+    response = client.post('/modulo', json={'a': 10, 'b': 3}) # Example: 10 % 3
+
+    # Assert that the response status code is 200 (OK)
+    assert response.status_code == 200, f"Expected status code 200, got {response.status_code}"
+
+    # Assert that the JSON response contains the correct 'result' value
+    assert response.json()['result'] == 1, f"Expected result 1, got {response.json()['result']}"
+
+# ---------------------------------------------
+# Test Function: test_modulo_by_zero_api (NEW)
+# ---------------------------------------------
+def test_modulo_by_zero_api(client):
+    """
+    Test the Modulo by Zero API Endpoint.
+
+    Verifies that the `/modulo` endpoint returns a 400 error when attempting modulo by zero.
+    """
+    # Send a POST request attempting modulo by zero
+    response = client.post('/modulo', json={'a': 5, 'b': 0})
+
+    # Assert that the response status code is 400 (Bad Request)
+    assert response.status_code == 400, f"Expected status code 400, got {response.status_code}"
+
+    # Assert that the JSON response contains an 'error' field
+    assert 'error' in response.json(), "Response JSON does not contain 'error' field"
+
+    # Assert that the 'error' field contains the correct error message
+    assert "Cannot perform modulo by zero!" in response.json()['error'], \
+        f"Expected error message 'Cannot perform modulo by zero!', got '{response.json()['error']}'"

@@ -232,3 +232,91 @@ def test_divide_by_zero() -> None:
     # Assert that the exception message contains the expected error message
     assert "Cannot divide by zero!" in str(excinfo.value), \
         f"Expected error message 'Cannot divide by zero!', but got '{excinfo.value}'"
+        
+
+# ---------------------------------------------
+# Unit Tests for the 'power' Function (NEW)
+# ---------------------------------------------
+
+@pytest.mark.parametrize(
+    "base, exponent, expected",
+    [
+        (2, 3, 8.0),       # Positive integer exponent
+        (4, 0.5, 2.0),     # Fractional exponent (square root)
+        (10, 0, 1.0),      # Zero exponent
+        (5, -1, 0.2),      # Negative integer exponent
+        (100, -0.5, 0.1),  # Negative fractional exponent
+        (0, 5, 0.0),       # Zero base, positive exponent
+        (-2, 3, -8.0),     # Negative base, odd integer exponent
+        (-2, 2, 4.0),      # Negative base, even integer exponent
+    ],
+    ids=[
+        "positive_integer_exponent",
+        "fractional_exponent",
+        "zero_exponent",
+        "negative_integer_exponent",
+        "negative_fractional_exponent",
+        "zero_base_positive_exponent",
+        "negative_base_odd_exponent",
+        "negative_base_even_exponent",
+    ]
+)
+def test_power(base: Number, exponent: Number, expected: float) -> None:
+    """
+    Test the 'power' function with various valid combinations of integers and floats.
+    """
+    result = power(base, exponent)
+    assert result == pytest.approx(expected), f"Expected power({base}, {exponent}) to be approximately {expected}, but got {result}"
+
+# Negative Test Case: Power Domain Error
+def test_power_domain_error() -> None:
+    """
+    Test the 'power' function for mathematically undefined operations.
+    """
+    with pytest.raises(ValueError) as excinfo:
+        # Attempt negative base to a fractional exponent
+        power(-1, 0.5)
+    assert "Math domain error" in str(excinfo.value)
+
+# ---------------------------------------------
+# Unit Tests for the 'modulo' Function (NEW)
+# ---------------------------------------------
+
+@pytest.mark.parametrize(
+    "a, b, expected",
+    [
+        (10, 3, 1),        # Positive integers
+        (10.5, 3, 1.5),    # Float dividend, integer divisor
+        (-10, 3, 2),       # Negative dividend (Python's specific behavior)
+        (10, -3, -2),      # Negative divisor (Python's specific behavior)
+        (5.5, 2.2, 1.1),   # Two floats
+        (0, 5, 0),         # Zero dividend
+        (7, 2, 1),         # Integer result
+        (7.0, 2.0, 1.0),   # Float result
+    ],
+    ids=[
+        "positive_integers",
+        "float_dividend_int_divisor",
+        "negative_dividend",
+        "negative_divisor",
+        "two_floats",
+        "zero_dividend",
+        "integer_result",
+        "float_result",
+    ]
+)
+def test_modulo(a: Number, b: Number, expected: Number) -> None:
+    """
+    Test the 'modulo' function with various combinations of integers and floats.
+    """
+    result = modulo(a, b)
+    assert result == pytest.approx(expected), f"Expected modulo({a}, {b}) to be approximately {expected}, but got {result}"
+
+# Negative Test Case: Modulo by Zero
+def test_modulo_by_zero() -> None:
+    """
+    Test the 'modulo' function with division by zero.
+    """
+    with pytest.raises(ValueError) as excinfo:
+        modulo(5, 0)
+    assert "Cannot perform modulo by zero!" in str(excinfo.value)
