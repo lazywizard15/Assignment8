@@ -1,39 +1,46 @@
+# Base requirements
 annotated-types==0.7.0
 anyio==4.6.2.post1
-astroid==3.3.5
+# astroid==3.3.5 # Often pulled in by pylint, maybe not needed directly
 certifi==2024.8.30
 charset-normalizer==3.4.0
 click==8.1.7
-coverage==7.6.4
-dill==0.3.9
+# dill==0.3.9 # Usually not needed unless doing advanced serialization
 exceptiongroup==1.2.2
-fastapi>=0.115.4
-greenlet==3.1.1
-h11>=0.16.0
-httpcore==1.0.6
-httpx==0.27.2
+fastapi>=0.115.4 # Keep FastAPI requirement
+greenlet==3.1.1 # Often related to asyncio/uvicorn
+h11>=0.16.0 # SECURITY FIX
+# httpcore==1.0.6 # REMOVE specific pin to resolve conflict
+httpx>=0.27.0 # Keep httpx updated, or remove pin to get latest compatible
 idna==3.10
 iniconfig==2.0.0
-isort==5.13.2
+# isort==5.13.2 # Code formatting, good practice but maybe not required run-time
 Jinja2==3.1.4
 MarkupSafe==3.0.2
-mccabe==0.7.0
+# mccabe==0.7.0 # Code complexity checker, often via pylint
 packaging==24.2
 platformdirs==4.3.6
-playwright==1.48.0
+playwright==1.48.0 # For e2e tests
 pluggy==1.5.0
 pydantic==2.9.2
 pydantic_core==2.23.4
-pyee==12.0.0
-pylint==3.3.1
-pytest==8.3.3
-pytest-cov==6.0.0
-pytest-pylint==0.21.0
+pyee==12.0.0 # Dependency for playwright
+# pylint==3.3.1 # Linter, not usually a runtime requirement
 requests==2.32.3
 sniffio==1.3.1
-starlette>=0.49.1
-tomli==2.0.2
-tomlkit==0.13.2
+starlette>=0.49.1 # SECURITY FIX
+# tomli==2.0.2 # Usually a build dependency
+# tomlkit==0.13.2 # Often via pylint/astroid
 typing_extensions==4.12.2
 urllib3==2.2.3
 uvicorn==0.32.0
+
+# Testing requirements
+pytest==8.3.3
+pytest-cov==6.0.0
+pytest-env # Added for pytest.ini env vars
+# pytest-pylint==0.21.0 # Linter plugin for pytest
+
+colorama
+pandas
+python-dotenv
